@@ -1,0 +1,115 @@
+{{- if lt hugo.Version "0.146.0" }}
+{{- errorf "=> hugo v0.146.0 or greater is required for hugo-PaperMod to build " }}
+{{- end -}}
+
+<!DOCTYPE html>
+{{- $theme := site.Params.defaultTheme | default "auto" }}
+{{- if eq $theme "dark" }}
+<html lang="{{ site.Language }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="dark">
+{{- else if eq $theme "light" }}
+<html lang="{{ site.Language }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="light">
+{{- else }}
+<html lang="{{ site.Language }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="auto">
+{{- end }}
+
+<head>
+    {{- partial "head.html" . }}
+    
+    <style>
+        @media (min-width: 1024px) {
+            /* 1. PC 화면에서 좌측 사이드바(240px)와 우측 본문 분할 */
+            .custom-blog-layout {
+                display: grid;
+                grid-template-columns: 240px 1fr;
+                gap: 60px;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+            
+            /* 2. 스크롤 내려도 카테고리가 화면에 고정되도록 설정 (Always On) */
+            .sidebar-categories {
+                position: sticky;
+                top: 120px;
+                height: fit-content;
+                padding-top: 20px;
+            }
+            
+            .sidebar-categories h3 {
+                margin-bottom: 20px;
+                font-size: 1.15rem;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+            }
+            
+            .sidebar-categories ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .sidebar-categories li {
+                margin-bottom: 12px;
+                font-size: 0.95rem;
+            }
+            
+            .sidebar-categories a {
+                color: var(--secondary);
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            
+            .sidebar-categories a:hover {
+                color: var(--primary);
+                text-decoration: underline;
+            }
+
+            /* 3. 기존 PaperMod의 중앙 정렬 및 여백 강제 리셋 (오른쪽 공간 확보) */
+            .main {
+                margin: 0 !important;
+                max-width: 100% !important;
+                padding-top: 20px !important;
+            }
+        }
+
+        /* 📱 태블릿 및 모바일 화면에서는 사이드바를 숨겨 안전하게 보호 */
+        @media (max-width: 1023px) {
+            .sidebar-categories {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+{{- if (or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`)) }}
+<body class="list" id="top">
+{{- else }}
+<body id="top">
+{{- end }}
+    {{ partialCached "header.html" . .Page -}}
+    
+    <div class="custom-blog-layout">
+        
+        <aside class="sidebar-categories">
+            <h3>📂 Categories</h3>
+            <ul>
+                {{- range $key, $value := .Site.Taxonomies.categories }}
+                <li>
+                    <a href="{{ "categories/" | relLangURL }}{{ $key | urlize }}/">
+                        # {{ $key }} ({{ $value.Count }})
+                    </a>
+                </li>
+                {{- end }}
+            </ul>
+        </aside>
+
+        <main class="main">
+            {{- block "main" . }}{{ end }}
+        </main>
+        
+    </div>
+
+    {{ partialCached "footer.html" . .Layout .Kind (.Param "hideFooter") (.Param "ShowCodeCopyButtons") -}}
+</body>
+
+</html>
