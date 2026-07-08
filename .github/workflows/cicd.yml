@@ -1,0 +1,49 @@
+name: blog
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 깃 서브모듈로 관리중인 테마 포함
+          submodules: true
+          fetch-depth: 0
+
+      - name: Setup Hugo Extended
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: 'latest'
+          extended: true
+
+      - name: Build Hugo Static Files
+        run: hugo --minify
+
+      - name: Deploy to Server via rsync
+        uses: Burnett01/rsync-deploy@v1
+        with:
+          switches: -avzr --delete
+          local_path: ./public/
+          remote_path: ${{ secrets.SERVER_PATH }}/public
+          remote_host: ${{ secrets.SERVER_HOST }}
+          remote_port: ${{ secrets.SERVER_PORT }}
+          remote_user: ${{ secrets.SERVER_USER }}
+          remote_key: ${{ secrets.SERVER_SSH_KEY }}
+
+      - name: Ensure Container is Running
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd ${{ secrets.SERVER_PATH }}
+            git pull
+            docker compose up -d

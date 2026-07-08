@@ -1,0 +1,16 @@
+baseURL = "https://www.returnminusone.com/"
+languageCode = "ko"
+title = "returnminusone"
+theme = "PaperMod"
+
+[params]
+  # 시스템 설정에 따라 라이트/다크 전환
+  defaultTheme = "auto"
+  # 글 목차(TOC) 자동생성
+  showToc = true
+  # 목차 기본으로 접어두기
+  TocOpen = false
+
+[taxonomies]
+  # 카테고리 활성화
+  category = "categories"

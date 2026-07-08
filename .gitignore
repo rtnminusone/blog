@@ -1,0 +1,32 @@
+# ==========================================
+# Hugo Standard Ignores
+# ==========================================
+# 빌드 결과물 (배포는 CI/CD가 하므로 깃 추적 제외)
+public/
+
+# 휴고의 내부 에셋 최적화 캐시 폴더
+resources/_gen/
+
+# 휴고 빌드 락 파일
+.hugo_build.lock
+
+# ==========================================
+# Docker & Environment Secrets
+# ==========================================
+# 환경변수 파일들
+.env
+.env.*
+docker-compose.override.yml
+
+# ==========================================
+# OS & IDE Junk
+# ==========================================
+# macOS / Windows 시스템 임시 파일
+.DS_Store
+Thumbs.db
+*.log
+
+# VS Code 커스텀 설정파일
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json

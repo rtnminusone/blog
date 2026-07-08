@@ -1,0 +1,14 @@
+services:
+
+  nginx:
+    image: nginx:alpine
+    container_name: blog-nginx
+    restart: unless-stopped
+    networks:
+      - gateway-network
+    volumes:
+      - ./public:/usr/share/nginx/html:ro
+
+networks:
+  gateway-network:
+    external: true
