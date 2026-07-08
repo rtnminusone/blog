@@ -14,7 +14,7 @@
 
 <head>
     {{- partial "head.html" . }}
-    
+
     <style>
         @media (min-width: 1024px) {
             /* 1. PC 화면에서 좌측 사이드바(240px)와 우측 본문 분할 */
@@ -26,7 +26,7 @@
                 margin: 0 auto;
                 padding: 0 20px;
             }
-            
+
             /* 2. 스크롤 내려도 카테고리가 화면에 고정되도록 설정 (Always On) */
             .sidebar-categories {
                 position: sticky;
@@ -34,31 +34,31 @@
                 height: fit-content;
                 padding-top: 20px;
             }
-            
+
             .sidebar-categories h3 {
                 margin-bottom: 20px;
                 font-size: 1.15rem;
                 font-weight: 700;
                 letter-spacing: 0.5px;
             }
-            
+
             .sidebar-categories ul {
                 list-style: none;
                 padding: 0;
                 margin: 0;
             }
-            
+
             .sidebar-categories li {
                 margin-bottom: 12px;
                 font-size: 0.95rem;
             }
-            
+
             .sidebar-categories a {
                 color: var(--secondary);
                 text-decoration: none;
                 transition: color 0.2s;
             }
-            
+
             .sidebar-categories a:hover {
                 color: var(--primary);
                 text-decoration: underline;
@@ -87,9 +87,15 @@
 <body id="top">
 {{- end }}
     {{ partialCached "header.html" . .Page -}}
-    
+
     <div class="custom-blog-layout">
-        
+
+        <div class="sidebar-all-posts" style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border);">
+            <a href="{{ "posts/" | relLangURL }}" style="font-weight: 700; font-size: 1.15rem; color: var(--primary); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: opacity 0.2s;">
+                📝 전체 글 보기
+            </a>
+        </div>
+
         <aside class="sidebar-categories">
             <h3>📂 Categories</h3>
             <ul>
@@ -107,7 +113,7 @@
         <main class="main">
             {{- block "main" . }}{{ end }}
         </main>
-        
+
     </div>
 
     {{ partialCached "footer.html" . .Layout .Kind (.Param "hideFooter") (.Param "ShowCodeCopyButtons") -}}
