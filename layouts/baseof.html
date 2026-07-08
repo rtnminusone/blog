@@ -89,14 +89,12 @@
     {{ partialCached "header.html" . .Page -}}
 
     <div class="custom-blog-layout">
-
-        <div class="sidebar-all-posts" style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border);">
-            <a href="{{ "posts/" | relLangURL }}" style="font-weight: 700; font-size: 1.15rem; color: var(--primary); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: opacity 0.2s;">
-                📝 전체 글 보기
-            </a>
-        </div>
-
         <aside class="sidebar-categories">
+            <div class="sidebar-all-posts" style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border);">
+                <a href="{{ "posts/" | relLangURL }}" style="font-weight: 700; font-size: 1.15rem; color: var(--primary); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: opacity 0.2s;">
+                    📝 전체 글 보기
+                </a>
+            </div>
             <h3>📂 Categories</h3>
             <ul>
                 {{- range $key, $value := .Site.Taxonomies.categories }}
@@ -113,7 +111,6 @@
         <main class="main">
             {{- block "main" . }}{{ end }}
         </main>
-
     </div>
 
     {{ partialCached "footer.html" . .Layout .Kind (.Param "hideFooter") (.Param "ShowCodeCopyButtons") -}}
