@@ -14,8 +14,3 @@ theme = "PaperMod"
 [taxonomies]
   # 카테고리 활성화
   category = "categories"
-
-[[menu.main]]
-  name = "Categories"
-  url = "/categories/"
-  weight = 10

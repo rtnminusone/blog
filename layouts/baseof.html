@@ -94,9 +94,10 @@
             <h3>📂 Categories</h3>
             <ul>
                 {{- range $key, $value := .Site.Taxonomies.categories }}
+                {{- $categoryPage := site.GetPage (printf "categories/%s" $key) }}
                 <li>
                     <a href="{{ "categories/" | relLangURL }}{{ $key | urlize }}/">
-                        # {{ $key }} ({{ $value.Count }})
+                        # {{ if $categoryPage }}{{ $categoryPage.Title }}{{ else }}{{ $key }}{{ end }} ({{ $value.Count }})
                     </a>
                 </li>
                 {{- end }}
