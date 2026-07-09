@@ -75,7 +75,81 @@
         /* 📱 태블릿 및 모바일 화면에서는 사이드바를 숨겨 안전하게 보호 */
         @media (max-width: 1023px) {
             .sidebar-categories {
+                position: fixed;
+                top: 0;
+                left: -290px; /* 화면 왼쪽 밖에 숨김 */
+                width: 280px;
+                height: 100vh;
+                background: var(--theme); /* PaperMod 배경색과 자동 싱크 */
+                z-index: 1001;
+                padding: 30px 24px;
+                box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+                overflow-y: auto;
+                transition: left 0.3s ease-in-out;
+            }
+
+            /* 활성화 시 화면 안으로 슬라이드 인 */
+            .sidebar-categories.open {
+                left: 0;
+            }
+
+            /* 모바일 전용 상단 닫기 버튼 */
+            .sidebar-close-btn {
+                display: block;
+                text-align: right;
+                font-size: 1.5rem;
+                color: var(--secondary);
+                cursor: pointer;
+                margin-bottom: 20px;
+                border: none;
+                background: none;
+                width: 100%;
+                padding: 0;
+            }
+
+            /* 모바일 전용 우하단 플로팅 카테고리 버튼 */
+            .mobile-category-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: fixed;
+                bottom: 30px;
+                right: 25px;
+                width: 56px;
+                height: 56px;
+                background-color: var(--primary);
+                color: var(--theme);
+                border-radius: 50%;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+                z-index: 1000;
+                cursor: pointer;
+                border: none;
+                font-size: 1.3rem;
+                outline: none;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* 드로어 열렸을 때 본문 흐리게 처리하는 배경막 */
+            .sidebar-overlay {
                 display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 1000;
+            }
+
+            .sidebar-overlay.open {
+                display: block;
+            }
+        }
+
+        /* 미디어 쿼리 상호 교차 리셋 (PC에서 모바일 요소 강제 숨김) */
+        @media (min-width: 1024px) {
+            .mobile-category-btn, .sidebar-overlay, .sidebar-close-btn {
+                display: none !important;
             }
         }
     </style>
@@ -90,6 +164,8 @@
 
     <div class="custom-blog-layout">
         <aside class="sidebar-categories">
+            <!-- 모바일 드로어 내부용 닫기 버튼 (PC에선 숨겨짐) -->
+            <button class="sidebar-close-btn" aria-label="Close Menu">✕</button>
             <div class="sidebar-all-posts" style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border);">
                 <a href="{{ "posts/" | relLangURL }}" style="font-weight: 700; font-size: 1.15rem; color: var(--primary); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: opacity 0.2s;">
                     📝 전체 글 보기
@@ -113,7 +189,32 @@
         </main>
     </div>
 
+    <!-- 모바일 전용 제어 인프라 요소 추가 -->
+    <button class="mobile-category-btn" aria-label="Open Categories">📂</button>
+    <div class="sidebar-overlay"></div>
+
     {{ partialCached "footer.html" . .Layout .Kind (.Param "hideFooter") (.Param "ShowCodeCopyButtons") -}}
+
+    <!-- 메뉴 온/오프 제어용 초경량 바닐라 JS 스크립트 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const openBtn = document.querySelector('.mobile-category-btn');
+            const closeBtn = document.querySelector('.sidebar-close-btn');
+            const sidebar = document.querySelector('.sidebar-categories');
+            const overlay = document.querySelector('.sidebar-overlay');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('open');
+            }
+
+            if (openBtn && sidebar && overlay) {
+                openBtn.addEventListener('click', toggleMenu);
+                closeBtn.addEventListener('click', toggleMenu);
+                overlay.addEventListener('click', toggleMenu); // 외부 어두운 영역 클릭 시 닫기
+            }
+        });
+    </script>
 </body>
 
 </html>
